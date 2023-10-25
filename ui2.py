@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.messagebox
 import customtkinter
+import os
 #from tkinter import filedialog
 #from tkinter import simpledialog, messagebox
 #from pickle import TRUE
@@ -19,7 +20,7 @@ class App(customtkinter.CTk):
 
         # configure window
         self.title("Image processing tool")
-        self.geometry(f"{1100}x{600}")
+        self.geometry(f"{910}x{730}")
 
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
@@ -89,14 +90,50 @@ class App(customtkinter.CTk):
 
         #original image preview code should be here
 
+        # create middle top widget to preview original image
+        self.middle_frame = customtkinter.CTkFrame(self, width= 200, height = 210, corner_radius=8)
+        self.middle_frame.grid(row=0, column=1, sticky="w", padx=(10, 5), pady=(5, 5))
+        self.middle_frame.grid_rowconfigure(1, weight=1)
+
+        #defining image path
+        image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "test_images")
+        self.input_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "cat.jpg")), size=(200, 200))
+        self.output_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "cat.jpg")), size=(400, 400))
+
+        #showing the original image
+        self.image_preview = customtkinter.CTkLabel(self.middle_frame, text="", image=self.input_image)
+        self.image_preview.grid(row=0, column=0, padx=20, pady=10)
+
+        #showing the original image title
+        self.title_image_preview = customtkinter.CTkLabel(self.middle_frame, text="Original Image")
+        self.title_image_preview.grid(row=0, column=1, padx=20, pady=10)
+
+
+        # create middle frame
+        #self.home_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        #self.home_frame.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        #self.home_frame.grid_columnconfigure(0, weight=1)
+
+
         #textbox
-        self.textbox = customtkinter.CTkTextbox(self, width=250)
-        self.textbox.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
+        #self.textbox = customtkinter.CTkTextbox(self, width=250)
+        #self.textbox.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
 
 
         #output image code should be here
 
+        # create middle bottom widget to preview output image
+        self.middle_frame = customtkinter.CTkFrame(self, width=100, height = 100, corner_radius=8)
+        self.middle_frame.grid(row=1, column=1, sticky="w",padx=(10, 10), pady=(5, 5))
+        #self.middle_frame.grid_rowconfigure(4, weight=1)
 
+        #output image title
+        self.title_image_output = customtkinter.CTkLabel(self.middle_frame, text="Output Image")
+        self.title_image_output.grid(row=0, column=0, padx=20, pady=10)
+
+        #output image
+        self.image_output = customtkinter.CTkLabel(self.middle_frame, text="", image=self.output_image)
+        self.image_output.grid(row=1, column=0, padx=20, pady=10)
 
 
 
@@ -106,7 +143,7 @@ class App(customtkinter.CTk):
 
         #tabview
         self.tabview = customtkinter.CTkTabview(self, width=250)
-        self.tabview.grid(row=0, column=2, rowspan=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
+        self.tabview.grid(row=0, column=2, rowspan=3, padx=(0, 20), pady=(20, 20), sticky="nsew")
 
         #define tabs
         self.tabview.add("Basic")
