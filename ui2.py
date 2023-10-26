@@ -2,9 +2,9 @@ import tkinter as tk
 import tkinter.messagebox
 import customtkinter
 import os
-#from tkinter import filedialog
-#from tkinter import simpledialog, messagebox
-#from pickle import TRUE
+from tkinter import filedialog
+from tkinter import simpledialog, messagebox
+from pickle import TRUE
 import cv2
 from PIL import Image, ImageTk
 import numpy as np
@@ -95,14 +95,20 @@ class App(customtkinter.CTk):
         self.middle_frame.grid(row=0, column=1, sticky="w", padx=(10, 5), pady=(5, 5))
         self.middle_frame.grid_rowconfigure(1, weight=1)
 
+        #original image display
+
+        self.image_preview = tk.Label(self.middle_frame, bg="#f0f0f0")
+        self.image_preview.grid(row=0, column=0, padx=20, pady=10)
+
         #defining image path
         image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "test_images")
-        self.input_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "cat.jpg")), size=(200, 200))
+        #self.input_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "cat.jpg")), size=(200, 200))
         self.output_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "cat.jpg")), size=(400, 400))
 
         #showing the original image
-        self.image_preview = customtkinter.CTkLabel(self.middle_frame, text="", image=self.input_image)
-        self.image_preview.grid(row=0, column=0, padx=20, pady=10)
+        #self.image_preview = customtkinter.CTkLabel(self.middle_frame, text="", image=self.image)
+        #self.image_preview = customtkinter.CTkLabel(self.middle_frame, text="", image=self.input_image)
+        #self.image_preview.grid(row=0, column=0, padx=20, pady=10)
 
         #showing the original image title
         self.title_image_preview = customtkinter.CTkLabel(self.middle_frame, text="Original Image")
@@ -362,7 +368,19 @@ class App(customtkinter.CTk):
 
     #open button function
     def sidebar_button_open_event(self):
-        print("sidebar_button open click")
+        file_path = filedialog.askopenfilename()
+        if file_path:
+            self.image = cv2.imread(file_path)
+            self.display_image()
+
+    def display_image(self):
+        if self.image is not None:
+            self.image = cv2.resize(self.image, (200, 200))
+            self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+            img_pil = Image.fromarray(self.image)
+            self.tk_image = ImageTk.PhotoImage(image=img_pil)
+            self.image_preview.configure(image=self.tk_image)
+
 
     #save button function
     def sidebar_button_save_event(self):
