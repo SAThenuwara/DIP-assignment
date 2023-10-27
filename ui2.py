@@ -100,33 +100,13 @@ class App(customtkinter.CTk):
         self.image_preview = tk.Label(self.middle_frame, bg="#f0f0f0")
         self.image_preview.grid(row=0, column=0, padx=20, pady=10)
 
-        #defining image path
-        image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "test_images")
-        #self.input_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "cat.jpg")), size=(200, 200))
-        self.output_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "cat.jpg")), size=(400, 400))
-
-        #showing the original image
-        #self.image_preview = customtkinter.CTkLabel(self.middle_frame, text="", image=self.image)
-        #self.image_preview = customtkinter.CTkLabel(self.middle_frame, text="", image=self.input_image)
-        #self.image_preview.grid(row=0, column=0, padx=20, pady=10)
 
         #showing the original image title
         self.title_image_preview = customtkinter.CTkLabel(self.middle_frame, text="Original Image")
         self.title_image_preview.grid(row=0, column=1, padx=20, pady=10)
 
 
-        # create middle frame
-        #self.home_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        #self.home_frame.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
-        #self.home_frame.grid_columnconfigure(0, weight=1)
-
-
-        #textbox
-        #self.textbox = customtkinter.CTkTextbox(self, width=250)
-        #self.textbox.grid(row=0, column=1, padx=(20, 0), pady=(20, 0), sticky="nsew")
-
-
-        #output image code should be here
+        #output image code
 
         # create middle bottom widget to preview output image
         self.middle_frame = customtkinter.CTkFrame(self, width=100, height = 100, corner_radius=8)
@@ -137,8 +117,10 @@ class App(customtkinter.CTk):
         self.title_image_output = customtkinter.CTkLabel(self.middle_frame, text="Output Image")
         self.title_image_output.grid(row=0, column=0, padx=20, pady=10)
 
-        #output image
-        self.image_output = customtkinter.CTkLabel(self.middle_frame, text="", image=self.output_image)
+
+        #output image display
+
+        self.image_output = tk.Label(self.middle_frame, bg="#f0f0f0")
         self.image_output.grid(row=1, column=0, padx=20, pady=10)
 
 
@@ -371,7 +353,9 @@ class App(customtkinter.CTk):
         file_path = filedialog.askopenfilename()
         if file_path:
             self.image = cv2.imread(file_path)
+            self.image_out = cv2.imread(file_path)
             self.display_image()
+            self.display_image_out()
 
     def display_image(self):
         if self.image is not None:
@@ -381,10 +365,19 @@ class App(customtkinter.CTk):
             self.tk_image = ImageTk.PhotoImage(image=img_pil)
             self.image_preview.configure(image=self.tk_image)
 
+    def display_image_out(self):
+        if self.image_out is not None:
+            self.image_out = cv2.resize(self.image_out, (400, 400))
+            self.image_out = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+            img_pil_out = Image.fromarray(self.image_out)
+            self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+            self.image_output.configure(image=self.tk_image_out)
+
 
     #save button function
-    def sidebar_button_save_event(self):
-        print("sidebar_button save click")
+    def sidebar_button_save_event(self, img_pill):
+        cv2.imwrite('grayscale.jpg',img_pill)
+        print("Image saved")
 
     #theme button function
     def change_appearance_mode_event(self, new_appearance_mode: str):
