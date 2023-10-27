@@ -277,10 +277,10 @@ class App(customtkinter.CTk):
                                                                command=self.button_edge_detect_event)
         self.button_edge_detect.grid(row=14, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
 
-        #tonal transform
+         #tonal transform
         self.button_tonal_transform = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="tonal transform", border_width=2, text_color=("gray10", "#DCE4EE"),
                                                                command=self.button_tonal_transform_event)
-        self.button_tonal_transform.grid(row=15, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
+        self.button_tonal_transform.grid(row=14, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
 
         #old code
 
