@@ -282,6 +282,13 @@ class App(customtkinter.CTk):
                                                                command=self.button_tonal_transform_event)
         self.button_tonal_transform.grid(row=15, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
 
+        #tonal input box
+        self.inputBox_tonal_transform_alpha = customtkinter.CTkEntry(self.tabview.tab("Advanced"), placeholder_text="Enter alpha")
+        self.inputBox_tonal_transform_alpha.grid(row=16, column=0, padx=(80, 10), pady=(0, 0), sticky="nsew")
+
+        self.inputBox_tonal_transform_beta = customtkinter.CTkEntry(self.tabview.tab("Advanced"), placeholder_text="Enter beta")
+        self.inputBox_tonal_transform_beta.grid(row=17, column=0, padx=(80, 10), pady=(0, 0), sticky="nsew")
+
         #old code
 
         #Sharpening title
@@ -565,13 +572,18 @@ class App(customtkinter.CTk):
     #tonal transform button
     def button_tonal_transform_event(self):
         if hasattr(self, 'image'):
-         alpha = simpledialog.askfloat("Tonal Transform", "Enter alpha value:")
-         beta = simpledialog.askinteger("Tonal Transform", "Enter beta value:")
-        
-        if alpha is not None and beta is not None:
-            og_image = cv2.convertScaleAbs(self.image, alpha=alpha, beta=beta)
-            self.image_out=og_image
+            alpha_str = self.inputBox_tonal_transform_alpha.get()
+            beta_str = self.inputBox_tonal_transform_beta.get()
+
+        try:
+            alpha = float(alpha_str)
+            beta = int(beta_str)
+            convert_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+            og_image = cv2.convertScaleAbs(convert_image, alpha=alpha, beta=beta)
+            self.image_out = og_image
             self.display_image_out()
+        except ValueError:
+            tk.messagebox.showerror("Error", "Invalid input. Please enter valid alpha and beta values.")      
      
 
     def open_input_dialog_event(self):
