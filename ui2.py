@@ -615,6 +615,15 @@ class App(customtkinter.CTk):
             convert_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
             og_image = cv2.convertScaleAbs(convert_image, alpha=alpha, beta=beta)
             self.image_out = og_image
+            alpha_str = self.inputBox_tonal_transform_alpha.get()
+            beta_str = self.inputBox_tonal_transform_beta.get()
+
+        try:
+            alpha = float(alpha_str)
+            beta = int(beta_str)
+            convert_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+            og_image = cv2.convertScaleAbs(convert_image, alpha=alpha, beta=beta)
+            self.image_out = og_image
             self.display_image_out()
         except ValueError:
             tk.messagebox.showerror("Error", "Invalid input. Please enter valid alpha and beta values.")    
