@@ -42,9 +42,9 @@ class App(customtkinter.CTk):
         self.sidebar_button_open.grid(row=1, column=0, padx=20, pady=10)
 
         #save button
-        self.sidebar_button_save = customtkinter.CTkButton(self.sidebar_frame, text="Save", 
-                                                           command=self.sidebar_button_save_event)
-        self.sidebar_button_save.grid(row=2, column=0, padx=20, pady=10)
+        #self.sidebar_button_save = customtkinter.CTkButton(self.sidebar_frame, text="Save", 
+                                                           #command=self.sidebar_button_save_event)
+        #self.sidebar_button_save.grid(row=2, column=0, padx=20, pady=10)
 
 
         #theme dropdown
@@ -57,34 +57,6 @@ class App(customtkinter.CTk):
         self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"], 
                                                                        command=self.change_appearance_mode_event)
         self.appearance_mode_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 10))
-
-
-        #default button architecture
-        #def button_event():
-        # print("button pressed")
-        #button = customtkinter.CTkButton(app,  command=button_event)
-
-        #button 3
-        #self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event)
-        #self.sidebar_button_3.grid(row=3, column=0, padx=20, pady=10)
-
-        #scale dropdown list
-        #self.scaling_label = customtkinter.CTkLabel(self.sidebar_frame, text="UI Scaling:", anchor="w")
-        #self.scaling_label.grid(row=7, column=0, padx=20, pady=(10, 0))
-        #self.scaling_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["80%", "90%", "100%", "110%", "120%"],
-                                                               #command=self.change_scaling_event)
-        #self.scaling_optionemenu.grid(row=8, column=0, padx=20, pady=(10, 20))
-
-        # create main entry and button
-        #self.entry = customtkinter.CTkEntry(self, placeholder_text="CTkEntry")
-        #self.entry.grid(row=3, column=1, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nsew")
-
-        #self.main_button_1 = customtkinter.CTkButton(master=self, fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"))
-        #self.main_button_1.grid(row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
-
-
-
-
 
 
 
@@ -175,9 +147,11 @@ class App(customtkinter.CTk):
                                                                   command=self.button_basic_rotate_event)
         self.main_button_basic_rotation.grid(row=5, column=0, padx=(40, 40), pady=(10, 0), sticky="nsew")
 
-        #cropping title
-        self.title_basic_cropping = customtkinter.CTkLabel(self.tabview.tab("Basic"), text="Cropping:", anchor="w")
-        self.title_basic_cropping.grid(row=6, column=0, padx=20, pady=(10, 0))
+        #checkbox cropping
+        self.check_var_basic_crop = customtkinter.StringVar(value="off")
+        self.checkbox_basic_crop = customtkinter.CTkCheckBox(self.tabview.tab("Basic"), text="   Cropping", command=self.checkbox_basic_crop_event, variable=self.check_var_basic_crop, onvalue="on", offvalue="off")
+        self.checkbox_basic_crop.grid(row=6, column=0, padx=5, pady=(20, 5))
+
 
         #cropping input box
         self.inputBox_basic_cropping = customtkinter.CTkEntry(self.tabview.tab("Basic"), 
@@ -185,28 +159,33 @@ class App(customtkinter.CTk):
         self.inputBox_basic_cropping.grid(row=7, column=0, padx=(20, 20), pady=(0, 0), sticky="nsew")
 
         #cropping submit button
+        self.main_button_basic_cropping_submit = customtkinter.CTkButton(master=self.tabview.tab("Basic"), fg_color="transparent", text="Submit Values", border_width=2, text_color=("gray10", "#DCE4EE"), 
+                                                                  command=self.button_basic_cropping_submit_event)
+        self.main_button_basic_cropping_submit.grid(row=8, column=0, padx=(40, 40), pady=(10, 0), sticky="nsew")
+
+        #cropping button
         self.main_button_basic_cropping = customtkinter.CTkButton(master=self.tabview.tab("Basic"), fg_color="transparent", text="Crop", border_width=2, text_color=("gray10", "#DCE4EE"), 
                                                                   command=self.button_basic_cropping_event)
-        self.main_button_basic_cropping.grid(row=8, column=0, padx=(40, 40), pady=(10, 0), sticky="nsew")
+        self.main_button_basic_cropping.grid(row=9, column=0, padx=(40, 40), pady=(10, 0), sticky="nsew")
 
         #flipping title
         self.title_basic_flipping = customtkinter.CTkLabel(self.tabview.tab("Basic"), text="Flipping:", anchor="w")
-        self.title_basic_flipping.grid(row=9, column=0, padx=20, pady=(10, 0))
+        self.title_basic_flipping.grid(row=10, column=0, padx=20, pady=(10, 0))
 
         #flip X button
         self.main_button_basic_flip_x = customtkinter.CTkButton(master=self.tabview.tab("Basic"), fg_color="transparent", text="Flip X", border_width=2, text_color=("gray10", "#DCE4EE"),
                                                                 command=self.button_basic_flip_x_event)
-        self.main_button_basic_flip_x.grid(row=10, column=0, padx=(50, 50), pady=(0, 10), sticky="nsew")
+        self.main_button_basic_flip_x.grid(row=11, column=0, padx=(50, 50), pady=(0, 10), sticky="nsew")
 
         #flip Y button
         self.main_button_basic_flip_y = customtkinter.CTkButton(master=self.tabview.tab("Basic"), fg_color="transparent", text="Flip Y", border_width=2, text_color=("gray10", "#DCE4EE"), 
                                                                 command=self.button_basic_flip_y_event)
-        self.main_button_basic_flip_y.grid(row=11, column=0, padx=(50, 50), pady=(0, 0), sticky="nsew")
+        self.main_button_basic_flip_y.grid(row=12, column=0, padx=(50, 50), pady=(0, 0), sticky="nsew")
 
         #reset button
         self.main_button_basic_reset = customtkinter.CTkButton(master=self.tabview.tab("Basic"), fg_color="transparent", text="Reset Values", border_width=2, text_color=("gray10", "#DCE4EE"),
                                                                command=self.button_basic_reset_event)
-        self.main_button_basic_reset.grid(row=12, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
+        self.main_button_basic_reset.grid(row=13, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
 
 
 
@@ -267,20 +246,27 @@ class App(customtkinter.CTk):
         self.slider_advanced_filter4.configure(number_of_steps=100)
         self.slider_advanced_filter4.grid(row=8, column=0, padx=5, pady=(20, 0))
 
-        #threshold
-        self.button_thresh = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="thresh", border_width=2, text_color=("gray10", "#DCE4EE"),
+        #threshold button
+        self.button_thresh = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="Threshold", border_width=2, text_color=("gray10", "#DCE4EE"),
                                                                command=self.button_thresh_event)
-        self.button_thresh.grid(row=13, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
+        self.button_thresh.grid(row=9, column=0, padx=(40, 40), pady=(40, 10), sticky="nsew")
 
-        #edge detect
-        self.button_edge_detect = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="edge detect", border_width=2, text_color=("gray10", "#DCE4EE"),
+        #edge detect button
+        self.button_edge_detect = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="Edge Detect", border_width=2, text_color=("gray10", "#DCE4EE"),
                                                                command=self.button_edge_detect_event)
-        self.button_edge_detect.grid(row=14, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
+        self.button_edge_detect.grid(row=10, column=0, padx=(40, 40), pady=(10, 10), sticky="nsew")
 
-         #tonal transform
-        self.button_tonal_transform = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="tonal transform", border_width=2, text_color=("gray10", "#DCE4EE"),
+        #tonal transform
+        self.button_tonal_transform = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="Tonal Transform", border_width=2, text_color=("gray10", "#DCE4EE"),
                                                                command=self.button_tonal_transform_event)
-        self.button_tonal_transform.grid(row=14, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
+        self.button_tonal_transform.grid(row=11, column=0, padx=(40, 40), pady=(10, 0), sticky="nsew")
+
+        #tonal input box
+        self.inputBox_tonal_transform_alpha = customtkinter.CTkEntry(self.tabview.tab("Advanced"), placeholder_text="Enter alpha")
+        self.inputBox_tonal_transform_alpha.grid(row=12, column=0, padx=(40, 40), pady=(5, 0), sticky="nsew")
+
+        self.inputBox_tonal_transform_beta = customtkinter.CTkEntry(self.tabview.tab("Advanced"), placeholder_text="Enter beta")
+        self.inputBox_tonal_transform_beta.grid(row=13, column=0, padx=(40, 40), pady=(5, 0), sticky="nsew")
 
         #old code
 
@@ -313,7 +299,7 @@ class App(customtkinter.CTk):
         #reset button
         self.main_button_basic_reset = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="Reset Values", border_width=2, text_color=("gray10", "#DCE4EE"),
                                                                command=self.button_basic_reset_event)
-        self.main_button_basic_reset.grid(row=12, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
+        self.main_button_basic_reset.grid(row=14, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
 
 
 
@@ -442,45 +428,100 @@ class App(customtkinter.CTk):
         else:
              tk.messagebox.showerror("Error", "Invalid input. Please enter valid value for rotating angle.")
 
+    #cropping checkbox event
+    def checkbox_basic_crop_event(self):
+        crop_state = self.check_var_basic_crop.get()
+        if hasattr(self, 'image'):
+            #x1, x2 = 0, 400
+            #y1, y2 = 0, 400
+            if crop_state == "on":  
+                print("crop checkbox toggled, current value:", self.check_var_basic_crop.get())
+
+            elif crop_state == "off":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.rgb_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out)   
 
     #cropping submit button function
-    def button_basic_cropping_event(self):
-            crop_value = self.inputBox_basic_cropping.get()
-            if crop_value:
-                try:
-                    width, height = map(int, crop_value.split())
-                    print("cropping values are, X:", width, " Y:", height)
-                    #self.image = cv2.resize(self.image, (width, height))
-                    #self.display_image()
-                except ValueError:
-                    tk.messagebox.showerror("Error", "Invalid input. Please enter valid width and height.")
+    def button_basic_cropping_submit_event(self):
+        crop_state = self.check_var_basic_crop.get()
+        if hasattr(self, 'image'):
+            if crop_state == "on":
+                crop_value = self.inputBox_basic_cropping.get()
+                if crop_value:
+                    try:
+                        x1 = 0
+                        y1 = 0
+                        width, height = map(int, crop_value.split())
+                        x2, y2 = width, height
+                        cv2.rectangle(self.image_out, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                        #self.cropped_image = self.image_out[y1:y2, x1:x2]
+                        #self.image_out = cv2.resize(self.flipHorizontal, (400, 400))
+                        img_pil_out = Image.fromarray(self.image_out)
+                        self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                        self.image_output.configure(image=self.tk_image_out)          
+                        print("cropping values are, X:", width, " Y:", height)
+                    except ValueError:
+                        tk.messagebox.showerror("Error", "Invalid input. Please enter valid width and height.")    
+            elif crop_state == "off":
+                tk.messagebox.showerror("Error", "Turn on cropping.")  
 
+
+    #cropping button function
+    def button_basic_cropping_event(self):
+        crop_state = self.check_var_basic_crop.get()
+        if hasattr(self, 'image'):
+            if crop_state == "on":
+                crop_value = self.inputBox_basic_cropping.get()
+                if crop_value:
+                    try:
+                        x1 = 0
+                        y1 = 0
+                        width, height = map(int, crop_value.split())
+                        x2, y2 = width, height
+                        cv2.rectangle(self.image_out, (x1, y1), (x2, y2), (255, 0, 0), 2)
+                        self.cropped_image = self.image_out[y1:y2, x1:x2]
+                        #self.image_out = cv2.resize(self.flipHorizontal, (400, 400))
+                        img_pil_out = Image.fromarray(self.cropped_image)
+                        self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                        self.image_output.configure(image=self.tk_image_out)          
+                        print("cropping values are, X:", width, " Y:", height)
+                    except ValueError:
+                        tk.messagebox.showerror("Error", "Invalid input. Please enter valid width and height.")    
+            elif crop_state == "off":
+                tk.messagebox.showerror("Error", "Turn on cropping.")  
     #flip x button function
     def button_basic_flip_x_event(self):
-        self.flipHorizontal = cv2.flip(self.image_out, 1)
-        self.image_out = cv2.resize(self.flipHorizontal, (400, 400))
-        img_pil_out = Image.fromarray(self.image_out)
-        self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
-        self.image_output.configure(image=self.tk_image_out)
-        print("flipping x")
+        if hasattr(self, 'image'):
+            self.flipHorizontal = cv2.flip(self.image_out, 1)
+            self.image_out = cv2.resize(self.flipHorizontal, (400, 400))
+            img_pil_out = Image.fromarray(self.image_out)
+            self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+            self.image_output.configure(image=self.tk_image_out)
+            print("flipping x")
 
     #flip y button function
     def button_basic_flip_y_event(self):
-        self.flipVertical = cv2.flip(self.image_out, 0)
-        self.image_out = cv2.resize(self.flipVertical, (400, 400))
-        img_pil_out = Image.fromarray(self.image_out)
-        self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
-        self.image_output.configure(image=self.tk_image_out)
-        print("flipping y")
+        if hasattr(self, 'image'):
+            self.flipVertical = cv2.flip(self.image_out, 0)
+            self.image_out = cv2.resize(self.flipVertical, (400, 400))
+            img_pil_out = Image.fromarray(self.image_out)
+            self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+            self.image_output.configure(image=self.tk_image_out)
+            print("flipping y")
 
     #reset button function
     def button_basic_reset_event(self):
-        self.image_out = cv2.resize(self.image2, (400, 400))
-        self.image_out= cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
-        img_pil_out = Image.fromarray(self.image_out)
-        self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
-        self.image_output.configure(image=self.tk_image_out)
-        print("reset image")
+        if hasattr(self, 'image'):
+            self.image_out = cv2.resize(self.image2, (400, 400))
+            self.image_out= cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+            img_pil_out = Image.fromarray(self.image_out)
+            self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+            self.image_output.configure(image=self.tk_image_out)
+
+            print("reset image")
 
 
 #Advanced requirements
@@ -546,7 +587,7 @@ class App(customtkinter.CTk):
         else:
              tk.messagebox.showerror("Error", "Invalid input. Please enter valid value for the filter value.")
 
- #threshold button
+  #threshold button
     def button_thresh_event(self):
         if hasattr(self, 'image'):
             og_image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
@@ -565,13 +606,18 @@ class App(customtkinter.CTk):
     #tonal transform button
     def button_tonal_transform_event(self):
         if hasattr(self, 'image'):
-         alpha = simpledialog.askfloat("Tonal Transform", "Enter alpha value:")
-         beta = simpledialog.askinteger("Tonal Transform", "Enter beta value:")
-        
-        if alpha is not None and beta is not None:
-            og_image = cv2.convertScaleAbs(self.image, alpha=alpha, beta=beta)
-            self.image_out=og_image
+            alpha_str = self.inputBox_tonal_transform_alpha.get()
+            beta_str = self.inputBox_tonal_transform_beta.get()
+
+        try:
+            alpha = float(alpha_str)
+            beta = int(beta_str)
+            convert_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+            og_image = cv2.convertScaleAbs(convert_image, alpha=alpha, beta=beta)
+            self.image_out = og_image
             self.display_image_out()
+        except ValueError:
+            tk.messagebox.showerror("Error", "Invalid input. Please enter valid alpha and beta values.")    
 
     def open_input_dialog_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
