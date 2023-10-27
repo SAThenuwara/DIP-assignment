@@ -265,7 +265,7 @@ class App(customtkinter.CTk):
         self.slider_advanced_filter4.grid(row=8, column=0, padx=5, pady=(20, 0))
 
         #threshold
-        self.button_thresh = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="thresh", border_width=2, text_color=("gray10", "#DCE4EE"),
+        self.button_thresh = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="threshold", border_width=2, text_color=("gray10", "#DCE4EE"),
                                                                command=self.button_thresh_event)
         self.button_thresh.grid(row=13, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
 
@@ -277,7 +277,7 @@ class App(customtkinter.CTk):
          #tonal transform
         self.button_tonal_transform = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="tonal transform", border_width=2, text_color=("gray10", "#DCE4EE"),
                                                                command=self.button_tonal_transform_event)
-        self.button_tonal_transform.grid(row=14, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
+        self.button_tonal_transform.grid(row=15, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
 
         #old code
 
@@ -526,6 +526,7 @@ class App(customtkinter.CTk):
             og_image = cv2.convertScaleAbs(self.image, alpha=alpha, beta=beta)
             self.image_out=og_image
             self.display_image_out()
+     
 
     def open_input_dialog_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
