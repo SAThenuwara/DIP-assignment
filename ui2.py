@@ -264,7 +264,10 @@ class App(customtkinter.CTk):
         self.slider_advanced_filter4.configure(number_of_steps=100)
         self.slider_advanced_filter4.grid(row=8, column=0, padx=5, pady=(20, 0))
 
-
+        #threshold
+        self.button_thresh = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="thresh", border_width=2, text_color=("gray10", "#DCE4EE"),
+                                                               command=self.button_thresh_event)
+        self.button_thresh.grid(row=13, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
 
         #old code
 
@@ -487,7 +490,12 @@ class App(customtkinter.CTk):
         else:
              tk.messagebox.showerror("Error", "Invalid input. Please enter valid value for the filter value.")
 
-
+    def button_thresh_event(self):
+        if hasattr(self, 'image'):
+            og_image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
+            _, thresh1 = cv2.threshold(og_image, 127, 255, cv2.THRESH_BINARY)
+            self.image_out = cv2.cvtColor(thresh1, cv2.COLOR_GRAY2BGR)  # Convert back to BGR
+        self.display_image_out()  # Update the output image display
 
     def open_input_dialog_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
