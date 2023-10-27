@@ -213,6 +213,9 @@ class App(customtkinter.CTk):
         #configure advanced tab
 
 
+                #configure advanced tab
+
+
         #sharpening
 
         #checkbox sharpening
@@ -366,6 +369,7 @@ class App(customtkinter.CTk):
         file_path = filedialog.askopenfilename()
         if file_path:
             self.image = cv2.imread(file_path)
+            self.image2 = cv2.imread(file_path)
             self.image_out = cv2.imread(file_path)
             self.display_image()
             self.display_image_out()
@@ -388,8 +392,8 @@ class App(customtkinter.CTk):
 
 
     #save button function
-    def sidebar_button_save_event(self, img_pill):
-        cv2.imwrite('grayscale.jpg',img_pill)
+    def sidebar_button_save_event(self, tk_image_out):
+        cv2.imwrite('grayscale.jpg',tk_image_out)
         print("Image saved")
 
     #theme button function
@@ -399,15 +403,42 @@ class App(customtkinter.CTk):
 #basic requirements
         
     #color mode menu function
-    def basic_color_option(self, basic_color_option):
-        print("optionmenu dropdown clicked:", basic_color_option)   
+    def basic_color_option(self, basic_color_option): 
+        if hasattr(self, 'image'):
+            self.grayscale_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2GRAY)
+            if basic_color_option == "RGB":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.image2, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.image_out)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out)
+                print("Showing the RGB image")
 
+            elif basic_color_option == "Grayscale":
+                img_pil_out = Image.fromarray(self.grayscale_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out)
+                print("Showing the Grayscale image")
+
+            elif basic_color_option == "B&W":
+                (thresh, BW_image) = cv2.threshold(self.grayscale_image, 127, 255, cv2.THRESH_BINARY)
+                img_pil_out = Image.fromarray(BW_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out)
+                print("Showing the Black & White image")
+
+        
     #rotate submit button function
     def button_basic_rotate_event(self):
         rotate_value = self.inputBox_basic_rotation.get()
         if rotate_value.isnumeric():
-                    rotate_angle = rotate_value
-                    print("rotate angle is", rotate_angle)
+                    rotate_angle = int(rotate_value)
+                    rows, cols, _ = self.image_out.shape
+                    M = cv2.getRotationMatrix2D((cols / 2, rows / 2), rotate_angle, 1)
+                    self.image_out = cv2.warpAffine(self.image_out, M, (cols, rows))
+                    img_pil_out = Image.fromarray(self.image_out)
+                    self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                    self.image_output.configure(image=self.tk_image_out)
         else:
              tk.messagebox.showerror("Error", "Invalid input. Please enter valid value for rotating angle.")
 
@@ -426,14 +457,29 @@ class App(customtkinter.CTk):
 
     #flip x button function
     def button_basic_flip_x_event(self):
+        self.flipHorizontal = cv2.flip(self.image_out, 1)
+        self.image_out = cv2.resize(self.flipHorizontal, (400, 400))
+        img_pil_out = Image.fromarray(self.image_out)
+        self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+        self.image_output.configure(image=self.tk_image_out)
         print("flipping x")
 
     #flip y button function
     def button_basic_flip_y_event(self):
+        self.flipVertical = cv2.flip(self.image_out, 0)
+        self.image_out = cv2.resize(self.flipVertical, (400, 400))
+        img_pil_out = Image.fromarray(self.image_out)
+        self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+        self.image_output.configure(image=self.tk_image_out)
         print("flipping y")
 
     #reset button function
     def button_basic_reset_event(self):
+        self.image_out = cv2.resize(self.image2, (400, 400))
+        self.image_out= cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+        img_pil_out = Image.fromarray(self.image_out)
+        self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+        self.image_output.configure(image=self.tk_image_out)
         print("reset image")
 
 
@@ -500,7 +546,7 @@ class App(customtkinter.CTk):
         else:
              tk.messagebox.showerror("Error", "Invalid input. Please enter valid value for the filter value.")
 
-    #threshold button
+ #threshold button
     def button_thresh_event(self):
         if hasattr(self, 'image'):
             og_image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
