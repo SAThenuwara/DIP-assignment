@@ -269,6 +269,16 @@ class App(customtkinter.CTk):
                                                                command=self.button_thresh_event)
         self.button_thresh.grid(row=13, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
 
+        #edge detect
+        self.button_edge_detect = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="edge detect", border_width=2, text_color=("gray10", "#DCE4EE"),
+                                                               command=self.button_edge_detect_event)
+        self.button_edge_detect.grid(row=14, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
+
+         #tonal transform
+        self.button_tonal_transform = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="tonal transform", border_width=2, text_color=("gray10", "#DCE4EE"),
+                                                               command=self.button_tonal_transform_event)
+        self.button_tonal_transform.grid(row=14, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
+
         #old code
 
         #Sharpening title
@@ -490,12 +500,32 @@ class App(customtkinter.CTk):
         else:
              tk.messagebox.showerror("Error", "Invalid input. Please enter valid value for the filter value.")
 
+    #threshold button
     def button_thresh_event(self):
         if hasattr(self, 'image'):
             og_image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
             _, thresh1 = cv2.threshold(og_image, 127, 255, cv2.THRESH_BINARY)
-            self.image_out = cv2.cvtColor(thresh1, cv2.COLOR_GRAY2BGR)  # Convert back to BGR
+            self.image_out = thresh1
         self.display_image_out()  # Update the output image display
+
+    #edge detect button
+    def button_edge_detect_event(self):
+        if hasattr(self, 'image'):
+            og_image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
+            edge_image = cv2.Canny(self.image, 100, 200)
+            self.image_out = edge_image
+        self.display_image_out()  #Update the output image display
+
+    #tonal transform button
+    def button_tonal_transform_event(self):
+        if hasattr(self, 'image'):
+         alpha = simpledialog.askfloat("Tonal Transform", "Enter alpha value:")
+         beta = simpledialog.askinteger("Tonal Transform", "Enter beta value:")
+        
+        if alpha is not None and beta is not None:
+            og_image = cv2.convertScaleAbs(self.image, alpha=alpha, beta=beta)
+            self.image_out=og_image
+            self.display_image_out()
 
     def open_input_dialog_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
