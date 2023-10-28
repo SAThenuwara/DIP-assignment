@@ -204,32 +204,31 @@ class App(customtkinter.CTk):
         #self.slider_advanced_sharp.grid(row=1, column=0, padx=5, pady=(20, 0))
 
 
-        #smoothing
-
-        #checkbox smoothing
-        self.check_var_advanced_smooth = customtkinter.StringVar(value="off")
-        self.checkbox_advanced_smooth = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Smoothing", command=self.checkbox_advanced_smooth_event, variable=self.check_var_advanced_smooth, onvalue="on", offvalue="off")
-        self.checkbox_advanced_smooth.grid(row=2, column=0, padx=5, pady=(20, 0))
-
-        #slider smoothing 
-        #self.slider_advanced_smooth = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_smooth_event)
-        #self.slider_advanced_smooth.configure(number_of_steps=100)
-        #self.slider_advanced_smooth.grid(row=3, column=0, padx=5, pady=(20, 0))
-
-
-
 
         # Embossing Filter
 
         #checkbox Embossing Filter
         self.check_var_advanced_emboss = customtkinter.StringVar(value="off")
         self.checkbox_advanced_emboss = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Embossing Filter", command=self.checkbox_advanced_emboss_event, variable=self.check_var_advanced_emboss, onvalue="on", offvalue="off")
-        self.checkbox_advanced_emboss.grid(row=4, column=0, padx=5, pady=(20, 0))
+        self.checkbox_advanced_emboss.grid(row=2, column=0, padx=5, pady=(20, 0))
 
         #slider Embossing Filter
         #self.slider_advanced_emboss = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_emboss_event)
         #self.slider_advanced_emboss.configure(number_of_steps=100)
-        #self.slider_advanced_emboss.grid(row=5, column=0, padx=5, pady=(20, 0))
+        #self.slider_advanced_emboss.grid(row=3, column=0, padx=5, pady=(20, 0))
+
+
+        #smoothing
+
+        #checkbox smoothing
+        self.check_var_advanced_smooth = customtkinter.StringVar(value="off")
+        self.checkbox_advanced_smooth = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Smoothing", command=self.checkbox_advanced_smooth_event, variable=self.check_var_advanced_smooth, onvalue="on", offvalue="off")
+        self.checkbox_advanced_smooth.grid(row=4, column=0, padx=5, pady=(20, 0))
+
+        #slider smoothing 
+        self.slider_advanced_smooth = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=1, to=101, command=self.slider_advanced_smooth_event)
+        self.slider_advanced_smooth.configure(number_of_steps=50)
+        self.slider_advanced_smooth.grid(row=5, column=0, padx=5, pady=(20, 0))
 
 
         #edge detection
@@ -534,35 +533,6 @@ class App(customtkinter.CTk):
         print("sharpness is: ", value)
 
 
-    #smoothness
-
-    #smoothness checkbox event
-    def checkbox_advanced_smooth_event(self):
-        smooth_state = self.check_var_advanced_smooth.get()
-        if hasattr(self, 'image'):
-            if smooth_state == "on":
-                self.smoothed_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
-                self.smoothed_image = cv2.GaussianBlur(self.smoothed_image, (5, 5), 0)
-                self.smooth_image = cv2.resize(self.smoothed_image, (400, 400))
-                self.smooth_image= cv2.cvtColor(self.smooth_image, cv2.COLOR_BGR2RGB)
-                img_pil_out = Image.fromarray(self.smooth_image)
-                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
-                self.image_output.configure(image=self.tk_image_out) 
-
-            elif smooth_state == "off":
-                self.rgb_image = cv2.resize(self.image2, (400, 400))
-                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
-                img_pil_out = Image.fromarray(self.rgb_image)
-                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
-                self.image_output.configure(image=self.tk_image_out)    
-
-        #self.blur_image = cv2.GaussianBlur(self.image_out, (15, 15), 0)
-        print("smoothness checkbox toggled, current value:", self.check_var_advanced_smooth.get())
-
-    #smoothness slider event
-    def slider_advanced_smooth_event(self, value):
-        print("smoothness is: ", value)
-
 
     #embossing filter
 
@@ -596,7 +566,55 @@ class App(customtkinter.CTk):
     def slider_advanced_emboss_event(self, value):
         print("filter 4 is: ", value)
 
+    #smoothness
 
+    #smoothness checkbox event
+    def checkbox_advanced_smooth_event(self):
+        smooth_state = self.check_var_advanced_smooth.get()
+        if hasattr(self, 'image'):
+            if smooth_state == "on":
+                self.smoothed_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+                self.smoothed_image = cv2.GaussianBlur(self.smoothed_image, (5, 5), 0)
+                self.smooth_image = cv2.resize(self.smoothed_image, (400, 400))
+                self.smooth_image= cv2.cvtColor(self.smooth_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.smooth_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
+
+            elif smooth_state == "off":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.rgb_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out)    
+
+        #self.blur_image = cv2.GaussianBlur(self.image_out, (15, 15), 0)
+        print("smoothness checkbox toggled, current value:", self.check_var_advanced_smooth.get())
+
+
+    #smoothness slider event
+    def slider_advanced_smooth_event(self, value):
+        if hasattr(self, 'image'):
+            smooth_state = self.check_var_advanced_smooth.get()
+            if smooth_state == "on":
+                smooth_val1 = int(value)
+                smooth_val2 = int(value)
+                self.smoothed_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+                self.smoothed_image = cv2.GaussianBlur(self.smoothed_image, (smooth_val1, smooth_val2), 0)
+                self.smooth_image = cv2.resize(self.smoothed_image, (400, 400))
+                self.smooth_image= cv2.cvtColor(self.smooth_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.smooth_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
+
+            elif smooth_state == "off":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.rgb_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out)  
+                 
+        print("smoothness is: ", value)
 
 
     #edge detection
