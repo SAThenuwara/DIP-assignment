@@ -212,35 +212,39 @@ class App(customtkinter.CTk):
         self.checkbox_advanced_smooth.grid(row=2, column=0, padx=5, pady=(20, 0))
 
         #slider smoothing 
-        self.slider_advanced_smooth = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_smooth_event)
-        self.slider_advanced_smooth.configure(number_of_steps=100)
-        self.slider_advanced_smooth.grid(row=3, column=0, padx=5, pady=(20, 0))
+        #self.slider_advanced_smooth = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_smooth_event)
+        #self.slider_advanced_smooth.configure(number_of_steps=100)
+        #self.slider_advanced_smooth.grid(row=3, column=0, padx=5, pady=(20, 0))
 
 
-        #filter 3
-
-        #checkbox filter 3
-        self.check_var_advanced_filter3 = customtkinter.StringVar(value="off")
-        self.checkbox_advanced_filter3 = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Filter 3", command=self.checkbox_advanced_filter3_event, variable=self.check_var_advanced_filter3, onvalue="on", offvalue="off")
-        self.checkbox_advanced_filter3.grid(row=4, column=0, padx=5, pady=(20, 0))
-
-        #slider filter 3
-        self.slider_advanced_filter3 = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_filter3_event)
-        self.slider_advanced_filter3.configure(number_of_steps=100)
-        self.slider_advanced_filter3.grid(row=5, column=0, padx=5, pady=(20, 0))
 
 
-        #filter 4
+        # Embossing Filter
 
-        #checkbox filter 4
-        self.check_var_advanced_filter4 = customtkinter.StringVar(value="off")
-        self.checkbox_advanced_filter4 = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Filter 4", command=self.checkbox_advanced_filter4_event, variable=self.check_var_advanced_filter4, onvalue="on", offvalue="off")
-        self.checkbox_advanced_filter4.grid(row=6, column=0, padx=5, pady=(20, 0))
+        #checkbox Embossing Filter
+        self.check_var_advanced_emboss = customtkinter.StringVar(value="off")
+        self.checkbox_advanced_emboss = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Embossing Filter", command=self.checkbox_advanced_emboss_event, variable=self.check_var_advanced_emboss, onvalue="on", offvalue="off")
+        self.checkbox_advanced_emboss.grid(row=4, column=0, padx=5, pady=(20, 0))
 
-        #slider filter 4
-        self.slider_advanced_filter4 = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_filter4_event)
-        self.slider_advanced_filter4.configure(number_of_steps=100)
-        self.slider_advanced_filter4.grid(row=7, column=0, padx=5, pady=(20, 0))
+        #slider Embossing Filter
+        #self.slider_advanced_emboss = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_emboss_event)
+        #self.slider_advanced_emboss.configure(number_of_steps=100)
+        #self.slider_advanced_emboss.grid(row=5, column=0, padx=5, pady=(20, 0))
+
+
+        #edge detection
+
+        #checkbox edge detection
+        self.check_var_advanced_edges = customtkinter.StringVar(value="off")
+        self.checkbox_advanced_edges = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Edge Detection", command=self.checkbox_advanced_edges_event, variable=self.check_var_advanced_edges, onvalue="on", offvalue="off")
+        self.checkbox_advanced_edges.grid(row=6, column=0, padx=5, pady=(20, 0))
+
+        #slider edge detection
+        self.slider_advanced_edges = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=500, command=self.slider_advanced_edges_event)
+        self.slider_advanced_edges.configure(number_of_steps=100)
+        self.slider_advanced_edges.grid(row=7, column=0, padx=5, pady=(20, 0))
+
+
 
         #threshold button
         self.button_thresh = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="Threshold", border_width=2, text_color=("gray10", "#DCE4EE"),
@@ -492,8 +496,8 @@ class App(customtkinter.CTk):
         if hasattr(self, 'image'):
             if sharp_state == "on":
                 kernel = np.array([[0, -1, 0],
-                            [-1, 5, -1],
-                            [0, -1, 0]])
+                                [-1, 5, -1],
+                                [0, -1, 0]])
                 self.sharpened_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
                 self.sharpened_image = cv2.filter2D(self.sharpened_image, -1, kernel)
                 self.sharp_image = cv2.resize(self.sharpened_image, (400, 400))
@@ -560,28 +564,89 @@ class App(customtkinter.CTk):
         print("smoothness is: ", value)
 
 
-    #filter 3
+    #embossing filter
 
-    #filter 3 checkbox event
-    def checkbox_advanced_filter3_event(self):
-        print("filter 3 checkbox toggled, current value:", self.check_var_advanced_filter3.get())
+    #Emboss checkbox event
+    def checkbox_advanced_emboss_event(self):
+        emboss_state = self.check_var_advanced_emboss.get()
+        if hasattr(self, 'image'):
+            if emboss_state == "on":
+                embossing_kernel = np.array([[-2, -1, 0],
+                                            [-1, 1, 1],
+                                            [0, 1, 2]])
+                self.embossed_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+                self.embossed_image = cv2.filter2D(self.embossed_image, -1, embossing_kernel)
+                self.embossed_image = cv2.resize(self.embossed_image, (400, 400))
+                self.embossed_image = cv2.cvtColor(self.embossed_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.embossed_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
 
-    #filter 3 slider event
-    def slider_advanced_filter3_event(self, value):
-        print("filter 3 is: ", value)
+            elif emboss_state == "off":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.rgb_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out)     
 
 
-    #filter 4
+        print("Emboss checkbox toggled, current value:", self.check_var_advanced_emboss.get())
 
-    #filter 4 checkbox event
-    def checkbox_advanced_filter4_event(self):
-        print("filter 4 checkbox toggled, current value:", self.check_var_advanced_filter4.get())
-
-    #filter 4 slider event
-    def slider_advanced_filter4_event(self, value):
+    #Emboss slider event
+    def slider_advanced_emboss_event(self, value):
         print("filter 4 is: ", value)
 
 
+
+
+    #edge detection
+
+    #edges checkbox event
+    def checkbox_advanced_edges_event(self):
+        if hasattr(self, 'image'):
+            edge_state = self.check_var_advanced_edges.get()
+            if edge_state == "on":
+                self.edges_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+                self.edges_image = cv2.Canny(self.edges_image, 100, 500)
+                self.edges_image = cv2.resize(self.edges_image, (400, 400))
+                self.edges_image= cv2.cvtColor(self.edges_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.edges_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
+
+            elif edge_state == "off":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.rgb_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out)    
+
+        print("edges checkbox toggled, current value:", self.check_var_advanced_edges.get())
+
+    #edges slider event
+    def slider_advanced_edges_event(self, value):
+        if hasattr(self, 'image'):
+            edge_state = self.check_var_advanced_edges.get()
+            if edge_state == "on":
+
+                edge_val = int(value)
+                self.edges_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+                self.edges_image = cv2.Canny(self.edges_image, 100, edge_val)
+                self.edges_image = cv2.resize(self.edges_image, (400, 400))
+                self.edges_image= cv2.cvtColor(self.edges_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.edges_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
+
+            elif edge_state == "off":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.rgb_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out)    
+
+
+        print("edge value is: ", value)
 
 
 
