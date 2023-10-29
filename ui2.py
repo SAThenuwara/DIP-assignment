@@ -207,8 +207,23 @@ class App(customtkinter.CTk):
         self.checkbox_advanced_emboss = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Embossing Filter",
                                                                   command=self.checkbox_advanced_emboss_event, 
                                                                   variable=self.check_var_advanced_emboss, onvalue="on", offvalue="off")
-        self.checkbox_advanced_emboss.grid(row=2, column=0, padx=5, pady=(20, 0))
+        self.checkbox_advanced_emboss.grid(row=1, column=0, padx=5, pady=(20, 0))
 
+
+        # Point Detection Filter
+
+        #checkbox point detect Filter
+        self.check_var_advanced_point = customtkinter.StringVar(value="off")
+        self.checkbox_advanced_point = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="  Point Detect Filter", 
+                                                                  command=self.checkbox_advanced_point_event, 
+                                                                  variable=self.check_var_advanced_point, onvalue="on", offvalue="off")
+        self.checkbox_advanced_point.grid(row=2, column=0, padx=5, pady=(20, 0))
+
+        #self.check_var_advanced_pointDetect = customtkinter.StringVar(value="off")
+        #self.checkbox_advanced_pointDetect = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Point Detect Filter",
+                                                                  #command=self.checkbox_advanced_point_event, 
+                                                                  #variable=self.check_var_advanced_pointDetect, onvalue="on", offvalue="off")
+        #self.checkbox_advanced_emboss.grid(row=2, column=0, padx=5, pady=(20, 0))
 
 
         #smoothing
@@ -218,12 +233,12 @@ class App(customtkinter.CTk):
         self.checkbox_advanced_smooth = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Smoothing", 
                                                                   command=self.checkbox_advanced_smooth_event, 
                                                                   variable=self.check_var_advanced_smooth, onvalue="on", offvalue="off")
-        self.checkbox_advanced_smooth.grid(row=4, column=0, padx=5, pady=(20, 0))
+        self.checkbox_advanced_smooth.grid(row=3, column=0, padx=5, pady=(20, 0))
 
         #slider smoothing 
         self.slider_advanced_smooth = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=1, to=101, command=self.slider_advanced_smooth_event)
         self.slider_advanced_smooth.configure(number_of_steps=50)
-        self.slider_advanced_smooth.grid(row=5, column=0, padx=5, pady=(20, 0))
+        self.slider_advanced_smooth.grid(row=4, column=0, padx=5, pady=(20, 0))
 
 
         #edge detection
@@ -592,6 +607,36 @@ class App(customtkinter.CTk):
         print("Emboss checkbox toggled, current value:", self.check_var_advanced_emboss.get())
 
 
+
+    #feature detection
+    def checkbox_advanced_point_event(self):
+        point_state = self.check_var_advanced_point.get()
+        if hasattr(self, 'image'):
+            if point_state == "on":
+                self.rgb_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+                self.gray_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2GRAY)
+                sift = cv2.SIFT_create()
+                keypoints = sift.detect(self.gray_image, None)
+                self.sift_image = cv2.drawKeypoints(self.rgb_image, keypoints, None, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+                self.point_image = cv2.cvtColor(self.sift_image, cv2.COLOR_BGR2RGB)
+                self.point_image = cv2.resize(self.point_image, (400, 400))
+                img_pil_out = Image.fromarray(self.point_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
+
+            elif point_state == "off":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.rgb_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out)     
+
+
+        print("point checkbox toggled, current value:", self.check_var_advanced_point.get())
+
+
+
+
     #smoothness
 
     #smoothness checkbox event
@@ -911,23 +956,6 @@ class App(customtkinter.CTk):
             print("Value value is: ", value)
 
 
-    def sift_feature_detection(self):
-        if hasattr(self, 'image'):
-            og_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
-            gray_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
-            sift = cv2.SIFT_create()
-            keypoints = sift.detect(gray_image, None)
-            sift_image = cv2.drawKeypoints(self.image, keypoints, None, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-            #fig, axs = plt.subplots(1, 2, figsize=(10, 5))
-            #axs[0].imshow(og_image, cmap='gray')
-            #axs[0].set_title('Original Image')
-            #axs[0].axis('off')
-            
-            #axs[1].imshow(sift_image, cmap='gray')
-            #axs[1].set_title('Point detected Image')
-            #axs[1].axis('off')
-            
-            #plt.show()
 
 
 
