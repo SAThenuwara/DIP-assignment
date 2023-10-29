@@ -198,31 +198,25 @@ class App(customtkinter.CTk):
         self.checkbox_advanced_sharp = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Sharpening", command=self.checkbox_advanced_sharp_event, variable=self.check_var_advanced_sharp, onvalue="on", offvalue="off")
         self.checkbox_advanced_sharp.grid(row=0, column=0, padx=5, pady=(20, 0))
 
-        #slider sharpening
-        #self.slider_advanced_sharp = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=-1, to=0, command=self.slider_advanced_sharp_event)
-        #self.slider_advanced_sharp.configure(number_of_steps=100)
-        #self.slider_advanced_sharp.grid(row=1, column=0, padx=5, pady=(20, 0))
-
-
 
         # Embossing Filter
 
         #checkbox Embossing Filter
         self.check_var_advanced_emboss = customtkinter.StringVar(value="off")
-        self.checkbox_advanced_emboss = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Embossing Filter", command=self.checkbox_advanced_emboss_event, variable=self.check_var_advanced_emboss, onvalue="on", offvalue="off")
+        self.checkbox_advanced_emboss = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Embossing Filter",
+                                                                  command=self.checkbox_advanced_emboss_event, 
+                                                                  variable=self.check_var_advanced_emboss, onvalue="on", offvalue="off")
         self.checkbox_advanced_emboss.grid(row=2, column=0, padx=5, pady=(20, 0))
 
-        #slider Embossing Filter
-        #self.slider_advanced_emboss = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_emboss_event)
-        #self.slider_advanced_emboss.configure(number_of_steps=100)
-        #self.slider_advanced_emboss.grid(row=3, column=0, padx=5, pady=(20, 0))
 
 
         #smoothing
 
         #checkbox smoothing
         self.check_var_advanced_smooth = customtkinter.StringVar(value="off")
-        self.checkbox_advanced_smooth = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Smoothing", command=self.checkbox_advanced_smooth_event, variable=self.check_var_advanced_smooth, onvalue="on", offvalue="off")
+        self.checkbox_advanced_smooth = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Smoothing", 
+                                                                  command=self.checkbox_advanced_smooth_event, 
+                                                                  variable=self.check_var_advanced_smooth, onvalue="on", offvalue="off")
         self.checkbox_advanced_smooth.grid(row=4, column=0, padx=5, pady=(20, 0))
 
         #slider smoothing 
@@ -243,29 +237,38 @@ class App(customtkinter.CTk):
         self.slider_advanced_edges.configure(number_of_steps=100)
         self.slider_advanced_edges.grid(row=7, column=0, padx=5, pady=(20, 0))
 
+        #checkbox tones
+        self.check_var_advanced_tones = customtkinter.StringVar(value="off")
+        self.checkbox_advanced_tones = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Tones", 
+                                                                 command=self.checkbox_advanced_tones_event, 
+                                                                 variable=self.check_var_advanced_tones, onvalue="on", offvalue="off")
+        self.checkbox_advanced_tones.grid(row=8, column=0, padx=5, pady=(20, 0))
+
+        #slider alpha
+        self.slider_advanced_alpha = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=1, to=3, command=self.slider_advanced_alpha_event)
+        self.slider_advanced_alpha.configure(number_of_steps=2)
+        self.slider_advanced_alpha.grid(row=9, column=0, padx=5, pady=(5, 0))
+
+        #slider beta
+        self.slider_advanced_beta = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_beta_event)
+        self.slider_advanced_beta.configure(number_of_steps=100)
+        self.slider_advanced_beta.grid(row=10, column=0, padx=5, pady=(5, 0))
 
 
-        #threshold button
-        self.button_thresh = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="Threshold", border_width=2, text_color=("gray10", "#DCE4EE"),
-                                                               command=self.button_thresh_event)
-        self.button_thresh.grid(row=8, column=0, padx=(40, 40), pady=(40, 10), sticky="nsew")
+        #color balancing
 
-        #edge detect button
-        self.button_edge_detect = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="Edge Detect", border_width=2, text_color=("gray10", "#DCE4EE"),
-                                                               command=self.button_edge_detect_event)
-        self.button_edge_detect.grid(row=9, column=0, padx=(40, 40), pady=(10, 10), sticky="nsew")
+        #checkbox HSV
+        self.check_var_advanced_hsv = customtkinter.StringVar(value="off")
+        self.checkbox_advanced_hsv = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Color Balancing", 
+                                                                 command=self.checkbox_advanced_hsv_event, 
+                                                                 variable=self.check_var_advanced_hsv, onvalue="on", offvalue="off")
+        self.checkbox_advanced_hsv.grid(row=11, column=0, padx=5, pady=(20, 0))
 
-        #tonal transform
-        self.button_tonal_transform = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="Tonal Transform", border_width=2, text_color=("gray10", "#DCE4EE"),
-                                                               command=self.button_tonal_transform_event)
-        self.button_tonal_transform.grid(row=10, column=0, padx=(40, 40), pady=(10, 0), sticky="nsew")
+        
 
-        #tonal input box
-        self.inputBox_tonal_transform_alpha = customtkinter.CTkEntry(self.tabview.tab("Advanced"), placeholder_text="Enter alpha")
-        self.inputBox_tonal_transform_alpha.grid(row=11, column=0, padx=(40, 40), pady=(5, 0), sticky="nsew")
 
-        self.inputBox_tonal_transform_beta = customtkinter.CTkEntry(self.tabview.tab("Advanced"), placeholder_text="Enter beta")
-        self.inputBox_tonal_transform_beta.grid(row=12, column=0, padx=(40, 40), pady=(5, 0), sticky="nsew")
+
+
 
 
         #reset button
@@ -562,9 +565,6 @@ class App(customtkinter.CTk):
 
         print("Emboss checkbox toggled, current value:", self.check_var_advanced_emboss.get())
 
-    #Emboss slider event
-    def slider_advanced_emboss_event(self, value):
-        print("filter 4 is: ", value)
 
     #smoothness
 
@@ -666,6 +666,109 @@ class App(customtkinter.CTk):
 
         print("edge value is: ", value)
 
+#tonal transformation
+
+    #tones checkbox event
+
+    def checkbox_advanced_tones_event(self):
+        if hasattr(self, 'image'):
+
+            print("tones checkbox toggled, current value:", self.check_var_advanced_tones.get())
+
+
+    #tones slider event alpha
+      
+    def slider_advanced_alpha_event(self, value):
+        if hasattr(self, 'image'):
+            tone_state = self.check_var_advanced_tones.get()
+            if tone_state == "on":
+
+                alpha_val = int(value)
+                self.alpha_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+                self.alpha_image = cv2.convertScaleAbs(self.alpha_image, alpha=alpha_val, beta=1)
+                self.alpha_image = cv2.resize(self.alpha_image, (400, 400))
+                self.alpha_image= cv2.cvtColor(self.alpha_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.alpha_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
+
+            elif tone_state == "off":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.rgb_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
+
+            print("alpha value is: ", value)
+
+
+    #tones slider event beta
+      
+    def slider_advanced_beta_event(self, value):
+        if hasattr(self, 'image'):
+            tone_state = self.check_var_advanced_tones.get()
+            if tone_state == "on":
+
+                beta_val = int(value)
+                self.beta_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+                self.beta_image = cv2.convertScaleAbs(self.beta_image, alpha=1 , beta=beta_val)
+                self.beta_image = cv2.resize(self.beta_image, (400, 400))
+                self.beta_image= cv2.cvtColor(self.beta_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.beta_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
+
+            elif tone_state == "off":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.rgb_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
+
+            print("beta value is: ", value)
+
+#color transformation
+
+    #HSV checkbox event
+
+    def checkbox_advanced_hsv_event(self):
+        if hasattr(self, 'image'):
+
+            print("HSV checkbox toggled, current value:", self.check_var_advanced_hsv.get())
+
+
+def adjust_color():
+    global selected_image_reference
+
+    if selected_image_reference:
+        try:
+            img = ImageTk.getimage(selected_image_reference)
+
+            # Get the values from the scales
+            saturation = saturation_scale.get()
+            hue = hue_scale.get()
+            lightness = lightness_scale.get()
+
+            # Convert the image to the HSV color space
+            img_hsv = img.convert('HSV')
+
+            # Adjust the color based on the values
+            img_hsv = ImageEnhance.Color(img_hsv).enhance(saturation)
+            img_hsv = ImageEnhance.Brightness(img_hsv).enhance(lightness)
+            img_hsv = ImageEnhance.Contrast(img_hsv).enhance(lightness)
+
+            # Convert the image back to RGB
+            img_rgb = img_hsv.convert('RGB')
+
+            # Update the canvas with the adjusted image
+            adjusted_image_reference = ImageTk.PhotoImage(image=img_rgb)
+            update_image_canvas(adjusted_image_reference)
+        except Exception as e:
+            print(f"Error adjusting color: {str(e)}")
+
+
+
+
 
 
     #filter type menu function
@@ -681,37 +784,7 @@ class App(customtkinter.CTk):
         else:
              tk.messagebox.showerror("Error", "Invalid input. Please enter valid value for the filter value.")
 
-  #threshold button
-    def button_thresh_event(self):
-        if hasattr(self, 'image'):
-            og_image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
-            _, thresh1 = cv2.threshold(og_image, 127, 255, cv2.THRESH_BINARY)
-            self.image_out = thresh1
-        self.display_image_out()  # Update the output image display
-
-    #edge detect button
-    def button_edge_detect_event(self):
-        if hasattr(self, 'image'):
-            og_image = cv2.cvtColor(self.image, cv2.COLOR_RGB2GRAY)
-            edge_image = cv2.Canny(self.image, 100, 200)
-            self.image_out = edge_image
-        self.display_image_out()  #Update the output image display
-
-    #tonal transform button
-    def button_tonal_transform_event(self):
-        if hasattr(self, 'image'):
-            alpha_str = self.inputBox_tonal_transform_alpha.get()
-            beta_str = self.inputBox_tonal_transform_beta.get()
-
-        try:
-            alpha = float(alpha_str)
-            beta = int(beta_str)
-            convert_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
-            og_image = cv2.convertScaleAbs(convert_image, alpha=alpha, beta=beta)
-            self.image_out = og_image
-            self.display_image_out()
-        except ValueError:
-            tk.messagebox.showerror("Error", "Invalid input. Please enter valid alpha and beta values.")    
+ 
 
     def open_input_dialog_event(self):
         dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
