@@ -56,7 +56,7 @@ class App(customtkinter.CTk):
         #theme menu
         self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"], 
                                                                        command=self.change_appearance_mode_event)
-        self.appearance_mode_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 10))
+        self.appearance_mode_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 20))
 
 
 
@@ -264,7 +264,32 @@ class App(customtkinter.CTk):
                                                                  variable=self.check_var_advanced_hsv, onvalue="on", offvalue="off")
         self.checkbox_advanced_hsv.grid(row=11, column=0, padx=5, pady=(20, 0))
 
-        
+        #title hue
+        self.title_advanced_hue = customtkinter.CTkLabel(self.tabview.tab("Advanced"), text="Hue:", anchor="w")
+        self.title_advanced_hue.grid(row=12, column=0, padx=(10, 0), pady=(0, 0))
+
+        #slider hue
+        self.slider_advanced_hue = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_hue_event)
+        self.slider_advanced_hue.configure(number_of_steps=100)
+        self.slider_advanced_hue.grid(row=13, column=0, padx=(5, 0), pady=(0, 5))
+
+        #title saturation
+        self.title_advanced_saturation = customtkinter.CTkLabel(self.tabview.tab("Advanced"), text="Saturation:", anchor="w")
+        self.title_advanced_saturation.grid(row=14, column=0, padx=(10, 0), pady=(0, 0))
+
+        #slider saturation
+        self.slider_advanced_saturation = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_saturation_event)
+        self.slider_advanced_saturation.configure(number_of_steps=100)
+        self.slider_advanced_saturation.grid(row=15, column=0, padx=(5, 0), pady=(0, 5))
+
+        #title value
+        self.title_advanced_value = customtkinter.CTkLabel(self.tabview.tab("Advanced"), text="Value:", anchor="w")
+        self.title_advanced_value.grid(row=16, column=0, padx=(10, 0), pady=(0, 0))
+
+        #slider value
+        self.slider_advanced_value = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_value_event)
+        self.slider_advanced_value.configure(number_of_steps=100)
+        self.slider_advanced_value.grid(row=17, column=0, padx=(5, 0), pady=(0, 0))
 
 
 
@@ -274,7 +299,7 @@ class App(customtkinter.CTk):
         #reset button
         self.main_button_basic_reset = customtkinter.CTkButton(master=self.tabview.tab("Advanced"), fg_color="transparent", text="Reset Values", border_width=2, text_color=("gray10", "#DCE4EE"),
                                                                command=self.button_basic_reset_event)
-        self.main_button_basic_reset.grid(row=13, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
+        self.main_button_basic_reset.grid(row=18, column=0, padx=(80, 10), pady=(50, 0), sticky="nsew")
 
 
 
@@ -588,7 +613,6 @@ class App(customtkinter.CTk):
                 self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
                 self.image_output.configure(image=self.tk_image_out)    
 
-        #self.blur_image = cv2.GaussianBlur(self.image_out, (15, 15), 0)
         print("smoothness checkbox toggled, current value:", self.check_var_advanced_smooth.get())
 
 
@@ -672,6 +696,22 @@ class App(customtkinter.CTk):
 
     def checkbox_advanced_tones_event(self):
         if hasattr(self, 'image'):
+            tone_state = self.check_var_advanced_tones.get()
+            if tone_state == "on":
+                self.alpha_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+                self.alpha_image = cv2.convertScaleAbs(self.alpha_image, alpha=2, beta=1)
+                self.alpha_image = cv2.resize(self.alpha_image, (400, 400))
+                self.alpha_image= cv2.cvtColor(self.alpha_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.alpha_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
+
+            elif tone_state == "off":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.rgb_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
 
             print("tones checkbox toggled, current value:", self.check_var_advanced_tones.get())
 
@@ -682,7 +722,6 @@ class App(customtkinter.CTk):
         if hasattr(self, 'image'):
             tone_state = self.check_var_advanced_tones.get()
             if tone_state == "on":
-
                 alpha_val = int(value)
                 self.alpha_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
                 self.alpha_image = cv2.convertScaleAbs(self.alpha_image, alpha=alpha_val, beta=1)
@@ -733,38 +772,143 @@ class App(customtkinter.CTk):
 
     def checkbox_advanced_hsv_event(self):
         if hasattr(self, 'image'):
+            tone_state = self.check_var_advanced_tones.get()
+            if tone_state == "on":
+                print("HSV checkbox toggled, current value:", self.check_var_advanced_hsv.get())
 
-            print("HSV checkbox toggled, current value:", self.check_var_advanced_hsv.get())
+            elif tone_state == "off":
+                self.rgb_image = cv2.resize(self.image2, (400, 400))
+                self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.rgb_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
+
+                print("HSV checkbox toggled, current value:", self.check_var_advanced_hsv.get())
+
+    #hue slider event
+    def slider_advanced_hue_event(self, value):
+        if hasattr(self, 'image'):
+            #hsv_state = self.check_var_advanced_hsv.get()
+
+            #if hsv_state == "on":
+
+                #hue_val = int(value)
+
+                #self.hue_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+
+                #self.hue_image = self.image_out.convert('HSV')
+
+                #self.hue_image - ImageEnhance.Color(img_hsv).enhance(saturation)
+
+                # Adjust the color based on the values
+                #self.hue_image = 
 
 
-def adjust_color():
-    global selected_image_reference
+                #img_hsv = ImageEnhance.Brightness(img_hsv).enhance(lightness)
+                #img_hsv = ImageEnhance.Contrast(img_hsv).enhance(lightness)
 
-    if selected_image_reference:
-        try:
-            img = ImageTk.getimage(selected_image_reference)
+                #self.hue_image = cv2.Canny(self.edges_image, 100, edge_val)
 
-            # Get the values from the scales
-            saturation = saturation_scale.get()
-            hue = hue_scale.get()
-            lightness = lightness_scale.get()
+                #self.edges_image = cv2.resize(self.edges_image, (400, 400))
+                #self.edges_image= cv2.cvtColor(self.edges_image, cv2.COLOR_BGR2RGB)
+                #img_pil_out = Image.fromarray(self.edges_image)
+                #self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                #self.image_output.configure(image=self.tk_image_out) 
 
-            # Convert the image to the HSV color space
-            img_hsv = img.convert('HSV')
+            #elif hsv_state == "off":
 
-            # Adjust the color based on the values
-            img_hsv = ImageEnhance.Color(img_hsv).enhance(saturation)
-            img_hsv = ImageEnhance.Brightness(img_hsv).enhance(lightness)
-            img_hsv = ImageEnhance.Contrast(img_hsv).enhance(lightness)
+                #self.rgb_image = cv2.resize(self.image2, (400, 400))
+                #self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                #img_pil_out = Image.fromarray(self.rgb_image)
+                #self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                #self.image_output.configure(image=self.tk_image_out)    
 
-            # Convert the image back to RGB
-            img_rgb = img_hsv.convert('RGB')
 
-            # Update the canvas with the adjusted image
-            adjusted_image_reference = ImageTk.PhotoImage(image=img_rgb)
-            update_image_canvas(adjusted_image_reference)
-        except Exception as e:
-            print(f"Error adjusting color: {str(e)}")
+            print("hue value is: ", value)
+
+
+    #saturation slider event
+    def slider_advanced_saturation_event(self, value):
+        if hasattr(self, 'image'):
+            #hsv_state = self.check_var_advanced_hsv.get()
+
+            #if hsv_state == "on":
+
+                #hue_val = int(value)
+
+                #self.hue_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+
+                #self.hue_image = self.image_out.convert('HSV')
+
+                #self.hue_image - ImageEnhance.Color(img_hsv).enhance(saturation)
+
+                # Adjust the color based on the values
+                #self.hue_image = 
+
+
+                #img_hsv = ImageEnhance.Brightness(img_hsv).enhance(lightness)
+                #img_hsv = ImageEnhance.Contrast(img_hsv).enhance(lightness)
+
+                #self.hue_image = cv2.Canny(self.edges_image, 100, edge_val)
+
+                #self.edges_image = cv2.resize(self.edges_image, (400, 400))
+                #self.edges_image= cv2.cvtColor(self.edges_image, cv2.COLOR_BGR2RGB)
+                #img_pil_out = Image.fromarray(self.edges_image)
+                #self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                #self.image_output.configure(image=self.tk_image_out) 
+
+            #elif hsv_state == "off":
+
+                #self.rgb_image = cv2.resize(self.image2, (400, 400))
+                #self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                #img_pil_out = Image.fromarray(self.rgb_image)
+                #self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                #self.image_output.configure(image=self.tk_image_out)    
+
+
+            print("saturation value is: ", value)
+
+    #hue slider event
+    def slider_advanced_value_event(self, value):
+        if hasattr(self, 'image'):
+            #hsv_state = self.check_var_advanced_hsv.get()
+
+            #if hsv_state == "on":
+
+                #hue_val = int(value)
+
+                #self.hue_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+
+                #self.hue_image = self.image_out.convert('HSV')
+
+                #self.hue_image - ImageEnhance.Color(img_hsv).enhance(saturation)
+
+                # Adjust the color based on the values
+                #self.hue_image = 
+
+
+                #img_hsv = ImageEnhance.Brightness(img_hsv).enhance(lightness)
+                #img_hsv = ImageEnhance.Contrast(img_hsv).enhance(lightness)
+
+                #self.hue_image = cv2.Canny(self.edges_image, 100, edge_val)
+
+                #self.edges_image = cv2.resize(self.edges_image, (400, 400))
+                #self.edges_image= cv2.cvtColor(self.edges_image, cv2.COLOR_BGR2RGB)
+                #img_pil_out = Image.fromarray(self.edges_image)
+                #self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                #self.image_output.configure(image=self.tk_image_out) 
+
+            #elif hsv_state == "off":
+
+                #self.rgb_image = cv2.resize(self.image2, (400, 400))
+                #self.rgb_image= cv2.cvtColor(self.rgb_image, cv2.COLOR_BGR2RGB)
+                #img_pil_out = Image.fromarray(self.rgb_image)
+                #self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                #self.image_output.configure(image=self.tk_image_out)    
+
+
+            print("Value value is: ", value)
+
 
 
 
