@@ -8,6 +8,7 @@ from pickle import TRUE
 import cv2
 from PIL import Image, ImageTk
 import numpy as np
+import matplotlib as plt
 
 #initialize the default color mode
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -258,38 +259,38 @@ class App(customtkinter.CTk):
         #color balancing
 
         #checkbox HSV
-        self.check_var_advanced_hsv = customtkinter.StringVar(value="off")
-        self.checkbox_advanced_hsv = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Color Balancing", 
-                                                                 command=self.checkbox_advanced_hsv_event, 
-                                                                 variable=self.check_var_advanced_hsv, onvalue="on", offvalue="off")
-        self.checkbox_advanced_hsv.grid(row=11, column=0, padx=5, pady=(20, 0))
+        #self.check_var_advanced_hsv = customtkinter.StringVar(value="off")
+        #self.checkbox_advanced_hsv = customtkinter.CTkCheckBox(self.tabview.tab("Advanced"), text="   Color Balancing", 
+                                                                 #command=self.checkbox_advanced_hsv_event, 
+                                                                 #variable=self.check_var_advanced_hsv, onvalue="on", offvalue="off")
+        #self.checkbox_advanced_hsv.grid(row=11, column=0, padx=5, pady=(20, 0))
 
         #title hue
-        self.title_advanced_hue = customtkinter.CTkLabel(self.tabview.tab("Advanced"), text="Hue:", anchor="w")
-        self.title_advanced_hue.grid(row=12, column=0, padx=(10, 0), pady=(0, 0))
+        #self.title_advanced_hue = customtkinter.CTkLabel(self.tabview.tab("Advanced"), text="Hue:", anchor="w")
+        #self.title_advanced_hue.grid(row=12, column=0, padx=(10, 0), pady=(0, 0))
 
         #slider hue
-        self.slider_advanced_hue = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_hue_event)
-        self.slider_advanced_hue.configure(number_of_steps=100)
-        self.slider_advanced_hue.grid(row=13, column=0, padx=(5, 0), pady=(0, 5))
+        #self.slider_advanced_hue = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_hue_event)
+        #self.slider_advanced_hue.configure(number_of_steps=100)
+        #self.slider_advanced_hue.grid(row=13, column=0, padx=(5, 0), pady=(0, 5))
 
         #title saturation
-        self.title_advanced_saturation = customtkinter.CTkLabel(self.tabview.tab("Advanced"), text="Saturation:", anchor="w")
-        self.title_advanced_saturation.grid(row=14, column=0, padx=(10, 0), pady=(0, 0))
+        #self.title_advanced_saturation = customtkinter.CTkLabel(self.tabview.tab("Advanced"), text="Saturation:", anchor="w")
+        #self.title_advanced_saturation.grid(row=14, column=0, padx=(10, 0), pady=(0, 0))
 
         #slider saturation
-        self.slider_advanced_saturation = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_saturation_event)
-        self.slider_advanced_saturation.configure(number_of_steps=100)
-        self.slider_advanced_saturation.grid(row=15, column=0, padx=(5, 0), pady=(0, 5))
+        #self.slider_advanced_saturation = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_saturation_event)
+        #self.slider_advanced_saturation.configure(number_of_steps=100)
+        #self.slider_advanced_saturation.grid(row=15, column=0, padx=(5, 0), pady=(0, 5))
 
         #title value
-        self.title_advanced_value = customtkinter.CTkLabel(self.tabview.tab("Advanced"), text="Value:", anchor="w")
-        self.title_advanced_value.grid(row=16, column=0, padx=(10, 0), pady=(0, 0))
+        #self.title_advanced_value = customtkinter.CTkLabel(self.tabview.tab("Advanced"), text="Value:", anchor="w")
+        #self.title_advanced_value.grid(row=16, column=0, padx=(10, 0), pady=(0, 0))
 
         #slider value
-        self.slider_advanced_value = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_value_event)
-        self.slider_advanced_value.configure(number_of_steps=100)
-        self.slider_advanced_value.grid(row=17, column=0, padx=(5, 0), pady=(0, 0))
+        #self.slider_advanced_value = customtkinter.CTkSlider(self.tabview.tab("Advanced"), from_=0, to=100, command=self.slider_advanced_value_event)
+        #self.slider_advanced_value.configure(number_of_steps=100)
+        #self.slider_advanced_value.grid(row=17, column=0, padx=(5, 0), pady=(0, 0))
 
 
 
@@ -908,6 +909,25 @@ class App(customtkinter.CTk):
 
 
             print("Value value is: ", value)
+
+
+    def sift_feature_detection(self):
+        if hasattr(self, 'image'):
+            og_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+            gray_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+            sift = cv2.SIFT_create()
+            keypoints = sift.detect(gray_image, None)
+            sift_image = cv2.drawKeypoints(self.image, keypoints, None, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+            #fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+            #axs[0].imshow(og_image, cmap='gray')
+            #axs[0].set_title('Original Image')
+            #axs[0].axis('off')
+            
+            #axs[1].imshow(sift_image, cmap='gray')
+            #axs[1].set_title('Point detected Image')
+            #axs[1].axis('off')
+            
+            #plt.show()
 
 
 
