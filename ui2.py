@@ -6,13 +6,15 @@ from tkinter import filedialog
 from tkinter import simpledialog, messagebox
 from pickle import TRUE
 import cv2
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageEnhance
 import numpy as np
 import matplotlib as plt
 
 #initialize the default color mode
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+
+
 
 
 class App(customtkinter.CTk):
@@ -333,6 +335,11 @@ class App(customtkinter.CTk):
         
         self.label_tab_3 = customtkinter.CTkLabel(self.tabview.tab("AI"), text="This is the AI tab")
         self.label_tab_3.grid(row=0, column=0, padx=20, pady=20)
+
+        #face detect button
+        self.main_button_ai_face = customtkinter.CTkButton(master=self.tabview.tab("AI"), fg_color="transparent", text="Detect Faces and Eyes", border_width=2, text_color=("gray10", "#DCE4EE"), 
+                                                                  command=self.button_ai_face_event)
+        self.main_button_ai_face.grid(row=1, column=0, padx=(40, 40), pady=(10, 0), sticky="nsew")
 
 
 
@@ -820,6 +827,23 @@ class App(customtkinter.CTk):
         if hasattr(self, 'image'):
             tone_state = self.check_var_advanced_tones.get()
             if tone_state == "on":
+
+                # Get the values from the scales
+                saturation = self.slider_advanced_saturation_event.get()
+                hue = self.slider_advanced_hue_event.get()
+                lightness = self.slider_advanced_value_event.get()
+
+                self.hue_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
+                self.hue_image = self.image_out.convert('HSV')
+                self.hue_image - ImageEnhance.Color(self.hue_image).enhance(saturation)
+                self.hue_image = ImageEnhance.Brightness(self.hue_image).enhance(lightness)
+                self.hue_image = ImageEnhance.Contrast(self.hue_image).enhance(lightness)
+
+                self.edges_image = cv2.resize(self.edges_image, (400, 400))
+                self.edges_image= cv2.cvtColor(self.edges_image, cv2.COLOR_BGR2RGB)
+                img_pil_out = Image.fromarray(self.edges_image)
+                self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
+                self.image_output.configure(image=self.tk_image_out) 
                 print("HSV checkbox toggled, current value:", self.check_var_advanced_hsv.get())
 
             elif tone_state == "off":
@@ -830,36 +854,12 @@ class App(customtkinter.CTk):
                 self.image_output.configure(image=self.tk_image_out) 
 
                 print("HSV checkbox toggled, current value:", self.check_var_advanced_hsv.get())
+               
 
     #hue slider event
     def slider_advanced_hue_event(self, value):
         if hasattr(self, 'image'):
-            #hsv_state = self.check_var_advanced_hsv.get()
 
-            #if hsv_state == "on":
-
-                #hue_val = int(value)
-
-                #self.hue_image = cv2.cvtColor(self.image_out, cv2.COLOR_BGR2RGB)
-
-                #self.hue_image = self.image_out.convert('HSV')
-
-                #self.hue_image - ImageEnhance.Color(img_hsv).enhance(saturation)
-
-                # Adjust the color based on the values
-                #self.hue_image = 
-
-
-                #img_hsv = ImageEnhance.Brightness(img_hsv).enhance(lightness)
-                #img_hsv = ImageEnhance.Contrast(img_hsv).enhance(lightness)
-
-                #self.hue_image = cv2.Canny(self.edges_image, 100, edge_val)
-
-                #self.edges_image = cv2.resize(self.edges_image, (400, 400))
-                #self.edges_image= cv2.cvtColor(self.edges_image, cv2.COLOR_BGR2RGB)
-                #img_pil_out = Image.fromarray(self.edges_image)
-                #self.tk_image_out = ImageTk.PhotoImage(image=img_pil_out)
-                #self.image_output.configure(image=self.tk_image_out) 
 
             #elif hsv_state == "off":
 
@@ -994,10 +994,53 @@ class App(customtkinter.CTk):
 
 #AI requirements
 
+    # AI button function
+    def button_ai_face_event(self):
+                if hasattr(self, 'image'):
+                    self.face_eye_det_filter()
 
-
-
-
+    def face_eye_det_filter(self):
+        windo = self
+        try:
+            global op,tkimage4
+            face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+            eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+            img = cv2.cvtColor(np.asarray(self.image_out), cv2.COLOR_RGB2BGR)
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+            for (x, y, w, h) in faces:
+                img = cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 4)
+                roi_gray = gray[y:y + h, x:x + w]
+                roi_color = img[y:y + h, x:x + w]
+                eyes = eye_cascade.detectMultiScale(roi_gray)
+                for (ex, ey, ew, eh) in eyes:
+                    cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 255, 0), 4)
+                break
+            else:
+                notip1 = tk.Label(windo, text='Face not found in Image', width=33, height=1,
+                                fg="white", bg="midnightblue",
+                                font=('times', 15, ' bold '))
+                notip1.place(x=844, y=370)
+                windo.after(5000, notip1)
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            op = Image.fromarray(img)
+            resi = op.resize(Image.ANTIALIAS)
+            tkimage4 = ImageTk.PhotoImage(resi)
+            imageFrame4 = tk.Frame(windo)
+            imageFrame4.place(x=845, y=60)
+            dn4 = tk.Label(windo, text='Face & Eye Image ', width=20, height=1, fg="white", bg="navy",
+                            font=('times', 22, ' bold '))
+            dn4.place(x=874, y=20)
+            display4 = tk.Label(imageFrame4)
+            display4.imgtk = tkimage4
+            display4.configure(image=tkimage4)
+            display4.grid()
+        except Exception as e:
+            notip = tk.Label(windo, text = 'Face not found in Image ', width=33, height=1, fg="white", bg="midnightblue",
+                                font=('times', 15, ' bold '))
+            notip.place(x=844, y=370)
+            windo.after(5000, notip)
+            print(e)
 
 
 if __name__ == "__main__":
